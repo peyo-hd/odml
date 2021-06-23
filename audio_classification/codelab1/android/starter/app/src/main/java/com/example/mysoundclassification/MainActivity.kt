@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         recorderSpecsTextView.text = recorderSpecs
 
         // TODO 3.3: Creating
-        val record = classifier.createAudioRecord()
+        val record = GAudioRecord.create(classifier.requiredInputBufferSize)
         record.startRecording()
 
         Timer().scheduleAtFixedRate(1, 500) {

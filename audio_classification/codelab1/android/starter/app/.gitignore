@@ -1,1 +1,3 @@
 /build
+/libs/gaudiorecord.jar
+/src/main/assets/*.tflite
