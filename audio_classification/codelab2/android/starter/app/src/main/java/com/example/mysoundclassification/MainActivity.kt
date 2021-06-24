@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     var TAG = "MainActivity"
 
     // TODO 1: define your model name
-    //var modelPath = "my_birds_model.tflite"
+    var modelPath = "my_birds_model.tflite"
 
     var probabilityThreshold: Float = 0.3f
 
@@ -58,21 +58,23 @@ class MainActivity : AppCompatActivity() {
 
         Timer().scheduleAtFixedRate(1, 500) {
 
-            val numberOfSamples = tensor.load(record)
+            tensor.load(record)
             val output = classifier.classify(tensor)
 
             // TODO 2: Check if it's a bird sound.
-            //var filteredModelOutput = output[0].categories.filter {
-            //    it.label.contains("Bird") && it.score > probabilityThreshold
-            //}
+            var filteredModelOutput = output[0].categories.filter {
+                (it.label.contains("bird", ignoreCase = true) ||
+                        it.label.contains("animal", ignoreCase = true))
+                        && it.score > probabilityThreshold
+            }
 
             // TODO 3: given there's a bird sound, which one is it?
-            //if (filteredModelOutput.isNotEmpty()) {
-            //    Log.i("Yamnet", "bird sound detected!")
-            //    filteredModelOutput = output[1].categories.filter {
-            //        it.score > probabilityThreshold
-            //    }
-            //}
+            if (filteredModelOutput.isNotEmpty()) {
+                Log.i("Yamnet", "bird sound detected!")
+                filteredModelOutput = output[1].categories.filter {
+                    it.score > probabilityThreshold
+                }
+            }
 
             val outputStr =
                 filteredModelOutput.sortedBy { -it.score }
@@ -81,6 +83,10 @@ class MainActivity : AppCompatActivity() {
             if (outputStr.isNotEmpty())
                 runOnUiThread {
                     textView.text = outputStr
+                }
+            else
+                runOnUiThread {
+                    textView.text = "Bird not detected"
                 }
         }
     }
