@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 "Sample Rate: ${format.sampleRate}"
         recorderSpecsTextView.text = recorderSpecs
 
-        val record = classifier.createAudioRecord()
+        val record = GAudioRecord.create(classifier.requiredInputBufferSize)
         record.startRecording()
 
         Timer().scheduleAtFixedRate(1, 500) {
